@@ -1,0 +1,842 @@
+:root {
+  --Very-Dark-Grayish-Blue: hsl(217, 19%, 35%);
+  --Desaturated-Dark-Blue: hsl(214, 17%, 51%);
+  --Grayish-Blue: hsl(212, 23%, 69%);
+  --Light-Grayish-Blue: hsl(210, 46%, 95%);
+}
+
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Prevent font size inflation */
+html {
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+  box-sizing: border-box;
+}
+
+/* Remove default margin in favour of better control in authored CSS */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin-block-end: 0;
+}
+
+/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+}
+
+/* Set core body defaults */
+body {
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+html,
+body {
+  margin: 0;
+  border: 0;
+}
+
+/* Set shorter line heights on headings and interactive elements */
+h1,
+h2,
+h3,
+h4,
+button,
+input,
+label {
+  line-height: 1.1;
+}
+
+/* Balance text wrapping on headings */
+h1,
+h2,
+h3,
+h4 {
+  text-wrap: balance;
+}
+
+/* A elements that don't have a class get default styles */
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+  color: currentColor;
+}
+
+/* Make images easier to work with */
+img,
+picture {
+  max-width: 100%;
+  display: block;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Make sure textareas without a rows attribute are not tiny */
+textarea:not([rows]) {
+  min-height: 10em;
+}
+
+/* Anything that has been anchored to should have extra scroll margin */
+:target {
+  scroll-margin-block: 5ex;
+}
+
+body {
+  font-family: "Manrope", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: left;
+  background-color: var(--Light-Grayish-Blue);
+  padding: 0 1.5rem;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  max-width: 20.4375rem;
+  background: #ffffff;
+  box-shadow: 0 2.5rem 2.5rem -0.625rem rgba(201, 213, 225, 0.503415);
+  border-radius: 0.625rem;
+  position: relative;
+}
+
+/*
+
+Got it 👍
+Here is the **updated, complete explanation**, with the **`position: fixed` clarification added cleanly into the previous description**, so everything is consistent and accurate.
+
+---
+
+# CSS `position` — Deep, Descriptive Explanation (Corrected & Complete)
+
+---
+
+## 🧱 Normal Document Flow (Baseline)
+
+By default, the browser lays out elements **top to bottom**, left to right.
+
+```
+[ Header ]
+[ Card   ]
+[ Footer ]
+```
+
+This is called **normal flow**.
+Every `position` value describes **how much an element is allowed to break this flow**.
+
+---
+
+## 1️⃣ `position: static` — *“I obey the document”*
+
+### Browser mindset
+
+> “You go exactly where HTML order places you.”
+
+### Behavior
+
+* Default for all elements
+* `top / left / right / bottom` → ignored
+* `z-index` → ignored
+
+### Parent reaction
+
+* Parent sizes and positions normally
+* Nothing special happens
+
+### Mental model
+
+🧱 **Brick in a wall**
+
+---
+
+## 2️⃣ `position: relative` — *“I stay, but I’m an anchor”*
+
+### Browser mindset
+
+> “Stay in flow, but allow visual movement and act as reference.”
+
+### Behavior
+
+* Stays in normal flow
+* Can be nudged with `top/left`
+* **Creates anchor for absolute children**
+
+### Parent reaction
+
+* Parent behaves normally
+* Layout unaffected
+
+### Child reaction
+
+* Absolute children position relative to this element
+
+### Mental model
+
+📍 **Pin in the layout**
+
+---
+
+## 3️⃣ `position: absolute` — *“I float inside an anchor”*
+
+### Browser mindset
+
+> “Remove from flow. Find nearest positioned ancestor.”
+
+### Behavior
+
+* Removed from normal layout
+* Parent ignores its size
+* Positions relative to:
+
+  1. nearest `relative / absolute / sticky / fixed` ancestor
+  2. otherwise → `<body>`
+
+### Parent reaction
+
+* Parent may collapse
+* Height/layout can break
+
+### Mental model
+
+🎈 **Balloon tied to nearest box**
+
+---
+
+## 4️⃣ `position: fixed` — *“I belong to the viewport”* ✅ (clarified)
+
+### Browser mindset
+
+> “Ignore all parents. Pin to the screen.”
+
+### Behavior
+
+* Removed from normal flow
+* Positioned relative to the **viewport**
+* Does **NOT scroll**
+* `top: 0` means **top of the screen**
+
+### Parent reaction
+
+* Parent completely ignores it
+* Container boundaries do not apply
+
+### Important clarification
+
+❌ **NOT relative to parent**
+❌ **NOT relative to container**
+
+✅ **Always relative to the viewport**
+
+### Example
+
+```css
+.navbar {
+  position: fixed;
+  top: 0;
+}
+```
+
+➡ Navbar sticks to the top of the screen while scrolling
+
+### Mental model
+
+📌 **Sticker on the browser glass**
+
+---
+
+### ⚠ Rare exception (advanced)
+
+If any parent has:
+
+```css
+transform
+filter
+perspective
+```
+
+Then `fixed` may behave like `absolute` relative to that parent.
+
+⚠ This causes many real-world bugs.
+
+---
+
+## 5️⃣ `position: sticky` — *“Relative → Fixed (smart)”*
+
+### Browser mindset
+
+> “Act normal until scrolling forces me to stick.”
+
+### Behavior
+
+1. Behaves like `relative`
+2. Scroll threshold reached
+3. Becomes fixed **within parent**
+4. Stops sticking at parent’s boundary
+
+### Parent reaction
+
+* Parent defines sticky limits
+* `overflow: hidden` on parent breaks it
+
+### Example
+
+```css
+.header {
+  position: sticky;
+  top: 0;
+}
+```
+
+### Mental model
+
+🧲 **Magnet sliding until it locks**
+
+---
+
+## 6️⃣ `position: inherit` — *“Copy parent”*
+
+### Behavior
+
+* Inherits position value from parent
+* Rarely needed
+
+---
+## 🧪 Real-world usage
+
+| Use case              | Position  |
+| --------------------- | --------- |
+| Card badge            | absolute  |
+| Tooltip               | absolute  |
+| Modal                 | fixed     |
+| Floating button       | fixed     |
+| Sticky section header | sticky    |
+| Layout structure      | flex/grid |
+
+---
+
+*/
+
+.image-section .drawers {
+  border-top-right-radius: 0.625rem;
+  border-top-left-radius: 0.625rem;
+}
+
+.text-section {
+  padding: 2.25rem 2rem 1.25rem;
+}
+
+h1 {
+  color: var(--Very-Dark-Grayish-Blue);
+  font-size: 1rem;
+  line-height: 150%;
+  letter-spacing: 0.0125em;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+.text-section p {
+  color: var(--Desaturated-Dark-Blue);
+  font-size: 0.8125rem;
+  line-height: 154%;
+  font-weight: 500;
+  letter-spacing: 0.007625em;
+  margin-top: 0;
+  margin-bottom: 2rem;
+}
+
+.author {
+  display: flex;
+  align-items: center;
+}
+
+.author img {
+  max-width: 2.5rem;
+  border-radius: 2.5rem;
+}
+
+.author-info {
+  margin-right: 3.6875rem;
+  padding-left: 1rem;
+}
+
+.author-info .name {
+  color: var(--Very-Dark-Grayish-Blue);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 154%;
+  letter-spacing: 0.007625em;
+  margin-top: 0;
+  margin-bottom: 0;
+  text-wrap: nowrap;
+}
+
+.author-info .date {
+  color: var(--Grayish-Blue);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 154%;
+  letter-spacing: 0.007625em;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.share-div {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: var(--Light-Grayish-Blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.share-div .share {
+  width: 0.9375rem;
+  height: 0.8125rem;
+  cursor: pointer;
+}
+
+.share-div:hover {
+  background-color: var(--Grayish-Blue);
+}
+
+.social {
+  box-shadow: 0 0.625rem 0.625rem 0 rgba(201, 213, 225, 0.5);
+  background-color: var(--Very-Dark-Grayish-Blue);
+  display: flex;
+  align-items: center;
+  padding: 1rem 1rem 1rem 2rem;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  border-bottom-left-radius: 0.625rem;
+  border-bottom-right-radius: 0.625rem;
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+}
+
+.social p {
+  color: var(--Grayish-Blue);
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  font-weight: 500;
+  line-height: 154%;
+  letter-spacing: 0.3125em;
+  margin: 0 1.3125rem 0 0;
+}
+
+.social .icons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-right: 3.5rem;
+}
+
+.icon:hover {
+  filter: invert(29%) sepia(14%) saturate(912%) hue-rotate(178deg)
+    brightness(99%) contrast(85%);
+}
+
+.hide {
+  visibility: visible;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: var(--Light-Grayish-Blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  top: -7px;
+}
+
+.hide:hover {
+  background-color: var(--Grayish-Blue);
+}
+
+.hidden {
+  display: none;
+}
+
+/*
+# Why use CSS `filter`?
+
+At a high level:
+
+> **`filter` lets you visually transform pixels *after* the element is rendered — without changing the asset, layout, or DOM.**
+
+This makes it extremely powerful in **real-world UI work**.
+
+---
+
+## 1️⃣ The core problem `filter` solves
+
+### Problem: Images are NOT text
+
+You can do this with text or SVG:
+
+```css
+color: red;
+fill: red;
+```
+
+But this **does NOT work** for:
+
+* PNG icons
+* JPG images
+* External SVGs used via `<img>`
+
+Once an image is rendered, the browser treats it as **pixels**, not shapes.
+
+So the question becomes:
+
+> “How do I recolor or visually modify pixels without editing the image file?”
+
+👉 **That’s exactly why `filter` exists.**
+
+---
+
+## 2️⃣ Why designers & devs rely on `filter`
+
+### 🎯 1. Single asset, many colors
+
+Without `filter`, you would need:
+
+```
+icon-black.png
+icon-blue.png
+icon-green.png
+icon-hover.png
+icon-active.png
+```
+
+With `filter`:
+
+```css
+.icon { filter: none; }
+.icon:hover { filter: ... }
+```
+
+✔ One file
+✔ Infinite color variations
+✔ Less bundle size
+✔ Easier maintenance
+
+---
+
+### 🎯 2. Hover & interaction states (very common)
+
+UI needs **feedback**:
+
+* hover
+* active
+* disabled
+* focused
+
+For images, `filter` is often the **only CSS-native option**.
+
+```css
+.icon:hover {
+  filter: brightness(120%);
+}
+```
+
+This instantly communicates:
+
+> “This element is interactive”
+
+---
+
+### 🎯 3. You don’t control the asset
+
+Often:
+
+* Icons come from a design system
+* Assets are from a CDN
+* SVGs are external
+* You’re not allowed to modify files
+
+`filter` works **without touching the asset**.
+
+This is HUGE in real teams.
+
+---
+
+## 3️⃣ Why `filter` is better than alternatives
+
+### ❌ Editing images
+
+* Time-consuming
+* Error-prone
+* Bloats repository
+* Designers hate repeated exports
+
+### ❌ Canvas / JS manipulation
+
+* Overkill
+* Slower
+* Less accessible
+
+### ❌ Opacity tricks
+
+* Changes transparency, not color
+* Poor contrast control
+
+### ✅ `filter`
+
+* Declarative
+* GPU-accelerated
+* CSS-only
+* Reversible
+* Animatable (carefully)
+
+---
+
+## 4️⃣ Why `filter` pipelines look “weird”
+
+This code:
+
+```css
+filter: invert(29%) sepia(14%) saturate(912%) hue-rotate(178deg);
+```
+
+Looks insane — but here’s why:
+
+### 🔍 You are NOT saying “make it blue”
+
+CSS has **no “recolor image” function**.
+
+Instead, you’re saying:
+
+1. Neutralize original colors
+2. Add a controlled color base
+3. Intensify it
+4. Rotate hue to target color
+
+This is math, not magic.
+
+📌 These values are usually **generated**, not written by hand.
+
+---
+
+## 5️⃣ Why designers accept this approach
+
+Because:
+
+* It’s predictable
+* It’s consistent across browsers
+* It avoids re-exporting assets
+* It works with design tokens
+
+Many professional design systems use this.
+
+---
+
+## 6️⃣ Performance reason (important)
+
+`filter`:
+
+* Runs on the **compositor layer**
+* Is usually **GPU-accelerated**
+* Does NOT trigger layout or reflow
+
+So this is cheap:
+
+```css
+.icon:hover {
+  filter: brightness(110%);
+}
+```
+
+Compared to:
+
+* JS-based manipulation
+* DOM changes
+* Repainting assets
+
+---
+
+## 7️⃣ When `filter` is the RIGHT choice
+
+Use `filter` when:
+
+* You are styling `<img>` icons
+* You need hover/active states
+* You want theme-based recoloring
+* You can’t inline SVG
+* You want CSS-only effects
+
+---
+
+## 8️⃣ When `filter` is the WRONG choice
+
+Don’t use `filter` when:
+
+* You have inline SVG (`fill` is better)
+* You need pixel-perfect color accuracy
+* You are animating heavy effects like `blur`
+* The image is large (background photos)
+
+---
+
+## 9️⃣ Real-world examples
+
+### Icon hover
+
+```css
+.icon:hover {
+  filter: brightness(120%) saturate(150%);
+}
+```
+
+### Disabled state
+
+```css
+.icon.disabled {
+  filter: grayscale(100%) opacity(50%);
+}
+```
+
+### Active state
+
+```css
+.icon:active {
+  filter: contrast(120%);
+}
+```
+
+### Theme switching
+
+```css
+.dark .icon {
+  filter: invert(100%);
+}
+```
+
+---
+
+## 🔑 Mental model (THIS is the takeaway)
+
+> **`filter` is for pixels what `color` is for text.**
+
+It doesn’t change structure.
+It doesn’t change layout.
+It only changes **how things look**.
+
+---
+
+## Final summary
+
+You use `filter` because:
+
+* Images are pixels
+* CSS needs a way to manipulate pixels
+* `filter` is fast, flexible, and CSS-native
+* It reduces asset duplication
+* It enables interactive UI states
+
+---
+*/
+
+@media screen and (min-width: 48rem) {
+  .container {
+    flex-direction: row;
+    max-width: 45.625rem;
+    min-height: 17.5rem;
+  }
+
+  .text-section {
+    padding: 2rem 2.5rem;
+  }
+
+  h1 {
+    font-size: 1.25rem;
+    line-height: 140%;
+    letter-spacing: 0.015625em;
+    text-wrap: wrap;
+  }
+
+  .text-section p {
+    margin-bottom: 1.25rem;
+  }
+
+  .image-section .drawers {
+    max-width: 17.8125rem;
+    min-height: 17.5rem;
+    border-bottom-left-radius: 0.625rem;
+    border-top-left-radius: 0.625rem;
+    border-top-right-radius: 0;
+  }
+
+  .author-info {
+    margin-right: 10.0625rem;
+  }
+
+  .hide {
+    visibility: hidden;
+  }
+  /*
+  When an element has visibility: hidden:
+
+✔ The element becomes invisible
+✔ It still exists in the layout
+✔ It still takes up space
+✔ The browser still calculates its width & height
+
+So the element is there, just not visible.
+*/
+
+  .social {
+    max-width: 15.5rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-radius: 0.625rem;
+    left: 75.2%;
+    bottom: 33%;
+  }
+
+  .social::after {
+    content: "";
+    position: absolute;
+    bottom: -23px;
+    left: 50%;
+    margin-left: -0.625rem;
+    border-width: 0.75rem;
+    border-style: solid;
+    border-color: var(--Very-Dark-Grayish-Blue) transparent transparent
+      transparent;
+  }
+
+  /*
+  Yes, for `socialLinks.classList.toggle("hidden");` to work as intended (showing the social links on the first button click), the `.social` element must have the `"hidden"` class initially in your HTML (e.g., `<div class="social hidden">`). Without it, the first click would add `"hidden"` and hide the element instead of revealing it. Add `class="hidden"` to the element in your HTML file to fix this. If you want it visible by default, use `remove("hidden")` instead of `toggle`.
+  */
+  .social .icons {
+    margin-right: 0;
+  }
+}
